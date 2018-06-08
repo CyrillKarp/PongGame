@@ -31,6 +31,13 @@ class Ball extends Rect {
     }
 }
 
+class Player extends Rect {
+    constructor() {
+        super(20, 100);
+        this.score = 0;
+    }
+}
+
 class Pong {
     constructor() {
         this._canvas = canvas;
@@ -41,6 +48,15 @@ class Pong {
         this.ball.pos.y = 50;
         this.ball.vel.x = 100;
         this.ball.vel.y = 100;
+        
+        this.players = [
+            new Player,
+            new Player,
+        ];
+        
+        this.players[0].pos.x = 40;
+        this.players[1].pos.x = this._canvas.width - 40;
+        this.players.forEach(player => player.pos.y = this._canvas.height / 2);
 
         let lastTime;
 
@@ -58,12 +74,14 @@ class Pong {
         this._context.fillStyle = '#000';
         this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
-        this.drowRect(this.ball);
+        this.drawRect(this.ball);
+        
+        this.players.forEach(player => this.drawRect(player));
     }
 
-    drowRect(rect) {
+    drawRect(rect) {
         this._context.fillStyle = '#fff';
-        this._context.fillRect(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
+        this._context.fillRect(rect.left, rect.top, rect.size.x, rect.size.y);
     }
 
     update(dt) {
