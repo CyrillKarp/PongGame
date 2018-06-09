@@ -3,11 +3,11 @@ class Vec {
         this.x = x;
         this.y = y;
     }
-    
+
     get len() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
-    
+
     set len(value) {
         const f = value / this.len;
         this.x *= f;
@@ -75,14 +75,47 @@ class Pong {
         }
         callback();
 
+        this.CHAR_PIXEL = 10;
+        this.CHARS = [
+            '111101101101111',
+            '010010010010010',
+            '111001111100111',
+            '111001111001111',
+            '101101111001001',
+            '111100111001111',
+            '111100111101111',
+            '111001001001001',
+            '111101111101111',
+            '111101111001111',
+        ].map(str => {
+            const canvas = document.createElement('canvas');
+            const s = this.CHAR_PIXEL;
+            canvas.height = s * 5;
+            canvas.width = s * 3;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#fff';
+            str.split('').forEach((fill, i) => {
+                if (fill === '1') {
+                    context.fillRect(
+                        (i % 3) * this.CHAR_PIXEL, 
+                        (i / 3 | 0) * this.CHAR_PIXEL,
+                        this.CHAR_PIXEL,
+                        this.CHAR_PIXEL);
+                }
+            });
+            return canvas;
+        });
+
         this.reset();
     }
 
     collide(player, ball) {
         if (player.left < ball.right && player.right > ball.left &&
             player.top < ball.bottom && player.bottom > ball.top) {
+            const len = ball.vel.len;
             ball.vel.x = -ball.vel.x;
-            ball.vel.len *= 1.05;
+            ball.vel.y += 300 * (Math.random() - .5);
+            ball.vel.len = len * 1.05;
         }
     }
 
@@ -147,18 +180,3 @@ canvas.addEventListener('mousemove', event => {
 canvas.addEventListener('click', event => {
     pong.start();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
