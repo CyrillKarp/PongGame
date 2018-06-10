@@ -126,13 +126,27 @@ class Pong {
         this.drawRect(this.ball);
 
         this.players.forEach(player => this.drawRect(player));
+        
+        this.drawScore();
     }
 
     drawRect(rect) {
         this._context.fillStyle = '#fff';
         this._context.fillRect(rect.left, rect.top, rect.size.x, rect.size.y);
     }
-
+    
+    drawScore() {
+        const align = this._canvas.width / 3;
+        const CHAR_W = this.CHAR_PIXEL * 4;
+        this.players.forEach((player, index) => {
+            const chars = player.score.toString().split('');
+            const offset = align * (index + 1) - (CHAR_W * chars.length / 2) + this.CHAR_PIXEL / 2;
+            chars.forEach((char, pos) => {
+                this._context.drawImage(this.CHARS[char | 0], offset + pos * CHAR_W, 20) 
+            });
+        });
+    }
+    
     reset() {
         this.ball.pos.x = this._canvas.width / 2;
         this.ball.pos.y = this._canvas.height / 2;
@@ -174,7 +188,8 @@ const canvas = document.getElementById('pong');
 const pong = new Pong(canvas);
 
 canvas.addEventListener('mousemove', event => {
-    pong.players[0].pos.y = event.offsetY;
+    const scale = event.offsetY / event.target.getBoundingClientRect().height;
+    pong.players[0].pos.y = canvas.height * scale;
 });
 
 canvas.addEventListener('click', event => {
