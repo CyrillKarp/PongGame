@@ -179,7 +179,7 @@ class Pong {
             this.ball.vel.y = -this.ball.vel.y;
         }
 
-        this.players[1].pos.y = this.ball.pos.y; //AI
+        this.players[1].pos.y = this.ball.pos.y + this.ball.vel.len / 10;  //AI
 
         this.players.forEach(player => this.collide(player, this.ball))
 
