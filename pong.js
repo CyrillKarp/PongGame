@@ -97,8 +97,7 @@ class Pong {
             str.split('').forEach((fill, i) => {
                 if (fill === '1') {
                     context.fillRect(
-                        (i % 3) * this.CHAR_PIXEL, 
-                        (i / 3 | 0) * this.CHAR_PIXEL,
+                        (i % 3) * this.CHAR_PIXEL, (i / 3 | 0) * this.CHAR_PIXEL,
                         this.CHAR_PIXEL,
                         this.CHAR_PIXEL);
                 }
@@ -120,13 +119,18 @@ class Pong {
     }
 
     draw() {
-        this._context.fillStyle = '#000';
+        const gradient = this._context.createLinearGradient(0, 0, 500, 500);
+        gradient.addColorStop(0, '#55efcd');
+        gradient.addColorStop(1, '#5bcaff');
+        this._context.fillStyle = gradient;
+
+        this._context.fillStyle = gradient;
         this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
         this.drawRect(this.ball);
 
         this.players.forEach(player => this.drawRect(player));
-        
+
         this.drawScore();
     }
 
@@ -134,7 +138,7 @@ class Pong {
         this._context.fillStyle = '#fff';
         this._context.fillRect(rect.left, rect.top, rect.size.x, rect.size.y);
     }
-    
+
     drawScore() {
         const align = this._canvas.width / 3;
         const CHAR_W = this.CHAR_PIXEL * 4;
@@ -142,11 +146,11 @@ class Pong {
             const chars = player.score.toString().split('');
             const offset = align * (index + 1) - (CHAR_W * chars.length / 2) + this.CHAR_PIXEL / 2;
             chars.forEach((char, pos) => {
-                this._context.drawImage(this.CHARS[char | 0], offset + pos * CHAR_W, 20) 
+                this._context.drawImage(this.CHARS[char | 0], offset + pos * CHAR_W, 20)
             });
         });
     }
-    
+
     reset() {
         this.ball.pos.x = this._canvas.width / 2;
         this.ball.pos.y = this._canvas.height / 2;
